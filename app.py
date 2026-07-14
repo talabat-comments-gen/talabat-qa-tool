@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 
 # حط الـ API Key بتاعك هنا بين علامات التنصيص
-MY_API_KEY = "YOUR_ACTUAL_API_KEY_HERE"
+MY_API_KEY = "AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"
 
 st.set_page_config(page_title="Talabat QA Tool", layout="centered")
 st.title("Talabat QA Analysis Engine")
