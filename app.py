@@ -1,25 +1,41 @@
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="أداة تحليل طلبات", layout="centered")
-st.title("🚀 أداة تحليل تقارير الجودة")
+# Page settings: Centered layout (less width)
+st.set_page_config(page_title="Talabat QA Engine", layout="centered")
+st.title("🚀 Talabat QA Analysis Engine")
 
-# هذا السطر هو الوحيد الذي يقرأ من الـ Secrets
-# تأكد ألا تضع أي مفاتيح داخل الكود هنا
+# Safely load the API key from Secrets
 try:
-    api_key = st.secrets["AQ.Ab8RN6Ix2qeVMs0rWW9B2pwjubJ21C-XVGnjthFWnoliFv2eSQ"]
+    api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error("الرجاء مراجعة إعدادات Secrets.")
+    st.error("Error: Please make sure GEMINI_API_KEY is added to Streamlit Secrets.")
     st.stop()
 
-chat_input = st.text_area("انسخ هنا نص الشات:", height=400)
+# Text area with increased height
+chat_input = st.text_area("Paste Chat Transcript Here:", height=400)
 
-if st.button("بدء التحليل"):
+if st.button("Generate Analysis"):
     if chat_input:
-        with st.spinner('جاري التحليل...'):
-            response = model.generate_content("حلل الشات التالي: " + chat_input)
-            st.write(response.text)
+        with st.spinner('Analyzing...'):
+            try:
+                prompt = f"""
+                You are the Talabat Log Engine. Extract FACTS ONLY from the chat transcript.
+                Strictly follow this structure:
+                --- LOG ---
+                (CST: , RST: , Agent: , RNA: , FU: )
+                --- CASE SUMMARY ---
+                (Customer Issue, Action Taken, Final Result)
+                
+                Chat: {chat_input}
+                """
+                response = model.generate_content(prompt)
+                st.success("Analysis Complete!")
+                st.markdown("### 📝 Result:")
+                st.write(response.text)
+            except Exception as e:
+                st.error(f"API Error: {e}")
     else:
-        st.warning("يرجى إدخال الشات.")
+        st.warning("Please paste the chat transcript first.")
