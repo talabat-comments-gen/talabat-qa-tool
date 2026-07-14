@@ -7,9 +7,10 @@ st.title("🚀 Talabat QA Analysis Engine")
 
 # Safely load the API key from Secrets
 try:
-    api_key = st.secrets["GEMINI_API_KEY"]
+    api_key = st.secrets["AQ.Ab8RN6LsFrrH9br-ZSukEHjxRpkXapxYy4Y_ZX1PXWZHqJXosw"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # غيرنا الموديل هنا للموديل المستقر اللي مش بيعمل 404
+    model = genai.GenerativeModel('gemini-pro')
 except Exception as e:
     st.error("Error: Please make sure GEMINI_API_KEY is added to Streamlit Secrets.")
     st.stop()
