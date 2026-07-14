@@ -1,16 +1,16 @@
 import streamlit as st
-from openai import OpenAI
+from groq import Groq
 
 # Page settings
 st.set_page_config(page_title="Talabat QA Engine", layout="centered")
 st.title("🚀 Talabat QA Analysis Engine")
 
-# Load OpenAI API Key
+# Load Groq API Key
 try:
-    api_key = st.secrets["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"]
-    client = OpenAI(api_key=api_key)
+    api_key = st.secrets["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"]
+    client = Groq(api_key=api_key)
 except Exception as e:
-    st.error("Error: Please add OPENAI_API_KEY to Streamlit Secrets.")
+    st.error("Error: Please add GROQ_API_KEY to Streamlit Secrets.")
     st.stop()
 
 # Text area
@@ -18,7 +18,7 @@ chat_input = st.text_area("Paste Chat Transcript Here:", height=400)
 
 if st.button("Generate Analysis"):
     if chat_input:
-        with st.spinner('Analyzing with ChatGPT...'):
+        with st.spinner('Analyzing with Groq...'):
             try:
                 prompt = f"""
                 You are the Talabat Log Engine. Extract FACTS ONLY from the chat transcript.
@@ -31,16 +31,16 @@ if st.button("Generate Analysis"):
                 Chat: {chat_input}
                 """
                 
-                response = client.chat.completions.create(
-                    model="gpt-4o-mini",
+                chat_completion = client.chat.completions.create(
                     messages=[{"role": "user", "content": prompt}],
+                    model="llama3-70b-8192", # موديل قوي جداً وسريع
                     temperature=0.3
                 )
                 
                 st.success("Analysis Complete!")
                 st.markdown("### 📝 Result:")
-                st.write(response.choices[0].message.content)
+                st.write(chat_completion.choices[0].message.content)
             except Exception as e:
-                st.error(f"ChatGPT API Error: {e}")
+                st.error(f"Groq API Error: {e}")
     else:
         st.warning("Please paste the chat transcript first.")
