@@ -1,23 +1,40 @@
 import streamlit as st
 import google.generativeai as genai
 
-# اسحب المفتاح من الـ Secrets
-api_key = st.secrets["AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"]
+# إعدادات الصفحة
+st.set_page_config(page_title="أداة تحليل طلبات", layout="wide")
+st.title("🚀 أداة تحليل تقارير الجودة - Talabat")
 
-# تحديث الإعدادات
-genai.configure(api_key=api_key)
+# إعداد الـ API
+try:
+    # الكود هنا بيبحث عن "صندوق" اسمه GEMINI_API_KEY
+    api_key = st.secrets["AQ.Ab8RN6Ix2qeVMs0rWW9B2pwjubJ21C-XVGnjthFWnoliFv2eSQ"]
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
+except Exception as e:
+    st.error("يرجى التأكد من إضافة الـ API Key في إعدادات Secrets.")
 
-# نستخدم نسخة الموديل الأكثر توافقاً حالياً
-model = genai.GenerativeModel('gemini-1.5-flash')
+# واجهة المستخدم بالعربية
+chat_input = st.text_area("انسخ هنا نص الشات (Transcript):", height=250)
 
-st.title("Talabat QA Analysis Engine")
-chat_input = st.text_area("Paste Chat Transcript Here:", height=200)
-
-if st.button("Generate Analysis"):
+if st.button("بدء التحليل"):
     if chat_input:
-        try:
-            response = model.generate_content(chat_input + "\n\nاستخرج الحقائق فقط (CST, RST, Agent, RNA, FU) وملخص للمشكلة.")
-            st.markdown("### Result:")
-            st.write(response.text)
-        except Exception as e:
-            st.error(f"Error: {e}")
+        with st.spinner('جاري التحليل...'):
+            try:
+                prompt = f"""
+                أنت Talabat Log Engine. استخرج الحقائق من الشات التالي.
+                التزم بالهيكل التالي بدقة:
+                --- LOG ---
+                (CST: , RST: , Agent: , RNA: , FU: )
+                --- ملخص الحالة ---
+                (مشكلة العميل، الإجراء المتخذ، النتيجة النهائية).
+                الشات: {chat_input}
+                """
+                response = model.generate_content(prompt)
+                st.success("تم التحليل بنجاح!")
+                st.markdown("### 📝 نتيجة التحليل:")
+                st.write(response.text)
+            except Exception as e:
+                st.error(f"خطأ أثناء الاتصال بالذكاء الاصطناعي: {e}")
+    else:
+        st.warning("من فضلك ضع نص الشات في المربع أولاً.")
