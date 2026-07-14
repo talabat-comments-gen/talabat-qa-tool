@@ -1,37 +1,27 @@
 import streamlit as st
 import google.generativeai as genai
 
-# إعدادات الصفحة بالعربي
-st.set_page_config(page_title="أداة تحليل طلبات", layout="centered") # خليناها centered عشان العرض يقل
-st.title("🚀 أداة تحليل تقارير الجودة - Talabat")
+st.set_page_config(page_title="أداة تحليل طلبات", layout="centered")
+st.title("🚀 أداة تحليل تقارير الجودة")
 
 # محاولة سحب المفتاح
 try:
+    # الكود هنا بيدور على اسم "GEMINI_API_KEY"
     api_key = st.secrets["AQ.Ab8RN6Ix2qeVMs0rWW9B2pwjubJ21C-XVGnjthFWnoliFv2eSQ"]
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-1.5-flash')
     
-    # واجهة المستخدم (بالعربي)
-    chat_input = st.text_area("انسخ هنا نص الشات (Transcript):", height=400) # زودنا الطول لـ 400
+    chat_input = st.text_area("انسخ هنا نص الشات (Transcript):", height=400)
 
     if st.button("بدء التحليل"):
         if chat_input:
             with st.spinner('جاري التحليل...'):
-                prompt = f"""
-                أنت Talabat Log Engine. استخرج الحقائق من الشات التالي باللغة العربية.
-                التزم بالهيكل التالي بدقة:
-                --- LOG ---
-                (CST: , RST: , Agent: , RNA: , FU: )
-                --- ملخص الحالة ---
-                (مشكلة العميل، الإجراء المتخذ، النتيجة النهائية).
-                الشات: {chat_input}
-                """
+                prompt = f"حلل الشات التالي: {chat_input}"
                 response = model.generate_content(prompt)
-                st.success("تم التحليل بنجاح!")
-                st.markdown("### 📝 نتيجة التحليل:")
                 st.write(response.text)
         else:
-            st.warning("من فضلك ضع نص الشات في المربع.")
+            st.warning("من فضلك ضع نص الشات.")
 
 except Exception as e:
-    st.error("⚠️ خطأ: تأكد من إضافة الـ API Key في إعدادات Secrets في Streamlit.")
+    st.error(f"⚠️ خطأ في السيكريتس: {e}")
+    st.write("تأكد أن الاسم في إعدادات Secrets هو: **GEMINI_API_KEY**")
