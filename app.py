@@ -13,7 +13,7 @@ if st.button("Generate Analysis"):
     if chat_input:
         try:
             genai.configure(api_key=MY_API_KEY)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel('gemini-1.5-flash-latest')
             
             prompt = f"""
             أنت Talabat Log Engine. استخرج الحقائق فقط بدون رأي أو تقييم.
