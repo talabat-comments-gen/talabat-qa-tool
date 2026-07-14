@@ -1,33 +1,23 @@
 import streamlit as st
 import google.generativeai as genai
 
-# حط الـ Key هنا مباشرة
-api_key = st.secrets["AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"
+# اسحب المفتاح من الـ Secrets
+api_key = st.secrets["AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"]
 
-st.set_page_config(page_title="Talabat QA Tool", layout="centered")
+# تحديث الإعدادات
+genai.configure(api_key=api_key)
+
+# نستخدم نسخة الموديل الأكثر توافقاً حالياً
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 st.title("Talabat QA Analysis Engine")
-
 chat_input = st.text_area("Paste Chat Transcript Here:", height=200)
 
 if st.button("Generate Analysis"):
     if chat_input:
         try:
-            genai.configure(api_key=MY_API_KEY)
-            model = genai.GenerativeModel('gemini-1.5-flash-latest')
-            
-            prompt = f"""
-            أنت Talabat Log Engine. استخرج الحقائق فقط بدون رأي أو تقييم.
-            --- LOG ---
-            (سجل الأحداث: CST, RST, Agent, RNA, FU مفصولة بـ //)
-            --- CASE SUMMARY ---
-            (ملخص موجز: المشكلة، الإجراء، النتيجة).
-            الشات: {chat_input}
-            """
-            
-            response = model.generate_content(prompt)
+            response = model.generate_content(chat_input + "\n\nاستخرج الحقائق فقط (CST, RST, Agent, RNA, FU) وملخص للمشكلة.")
             st.markdown("### Result:")
             st.write(response.text)
         except Exception as e:
             st.error(f"Error: {e}")
-    else:
-        st.warning("Please paste the chat transcript.")
