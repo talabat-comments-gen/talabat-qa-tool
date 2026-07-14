@@ -1,8 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
 
-# حط المفتاح الجديد هنا بالضبط
-MY_API_KEY = "AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"
+# بنسحب المفتاح من إعدادات الموقع مش من جوه الكود
+MY_API_KEY = st.secrets["AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"]
 
 st.set_page_config(page_title="Talabat QA Tool", layout="centered")
 st.title("Talabat QA Analysis Engine")
@@ -13,7 +13,6 @@ if st.button("Generate Analysis"):
     if chat_input:
         try:
             genai.configure(api_key=MY_API_KEY)
-            # استخدمنا gemini-1.5-flash لأنه الأسرع والأضمن حالياً
             model = genai.GenerativeModel('gemini-1.5-flash')
             
             prompt = f"""
@@ -29,6 +28,6 @@ if st.button("Generate Analysis"):
             st.markdown("### Result:")
             st.write(response.text)
         except Exception as e:
-            st.error(f"Error Details: {e}")
+            st.error(f"Error: {e}")
     else:
         st.warning("Please paste the chat transcript.")
