@@ -1,30 +1,24 @@
 import streamlit as st
 import google.generativeai as genai
 
-# إعدادات الصفحة
-st.set_page_config(page_title="أداة تحليل طلبات", layout="wide")
+# إعدادات الصفحة بالعربي
+st.set_page_config(page_title="أداة تحليل طلبات", layout="centered") # خليناها centered عشان العرض يقل
 st.title("🚀 أداة تحليل تقارير الجودة - Talabat")
 
-# إعداد الـ API بشكل آمن
+# محاولة سحب المفتاح
 try:
     api_key = st.secrets["AQ.Ab8RN6Ix2qeVMs0rWW9B2pwjubJ21C-XVGnjthFWnoliFv2eSQ"]
     genai.configure(api_key=api_key)
-    # تعريف الموديل هنا في مكان عام عشان ميبقاش فيه خطأ
     model = genai.GenerativeModel('gemini-1.5-flash')
-except Exception as e:
-    st.error("يرجى التأكد من إضافة الـ API Key في إعدادات Secrets.")
-    st.stop() # هيوقف الموقع لحد ما تحط المفتاح
+    
+    # واجهة المستخدم (بالعربي)
+    chat_input = st.text_area("انسخ هنا نص الشات (Transcript):", height=400) # زودنا الطول لـ 400
 
-# واجهة المستخدم بالعربية
-chat_input = st.text_area("انسخ هنا نص الشات (Transcript):", height=250)
-
-if st.button("بدء التحليل"):
-    if chat_input:
-        with st.spinner('جاري التحليل...'):
-            try:
-                # الكود دلوقتي بيستخدم الموديل اللي عرفناه فوق
+    if st.button("بدء التحليل"):
+        if chat_input:
+            with st.spinner('جاري التحليل...'):
                 prompt = f"""
-                أنت Talabat Log Engine. استخرج الحقائق من الشات التالي.
+                أنت Talabat Log Engine. استخرج الحقائق من الشات التالي باللغة العربية.
                 التزم بالهيكل التالي بدقة:
                 --- LOG ---
                 (CST: , RST: , Agent: , RNA: , FU: )
@@ -36,7 +30,8 @@ if st.button("بدء التحليل"):
                 st.success("تم التحليل بنجاح!")
                 st.markdown("### 📝 نتيجة التحليل:")
                 st.write(response.text)
-            except Exception as e:
-                st.error(f"خطأ أثناء الاتصال بالذكاء الاصطناعي: {e}")
-    else:
-        st.warning("من فضلك ضع نص الشات في المربع أولاً.")
+        else:
+            st.warning("من فضلك ضع نص الشات في المربع.")
+
+except Exception as e:
+    st.error("⚠️ خطأ: تأكد من إضافة الـ API Key في إعدادات Secrets في Streamlit.")
