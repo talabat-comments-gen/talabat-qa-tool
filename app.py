@@ -7,7 +7,7 @@ st.title("🚀 Talabat QA Analysis Engine")
 
 # Load Groq API Key
 try:
-    api_key = st.secrets["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"]
+    api_key = st.secrets["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"]
     client = Groq(api_key=api_key)
 except Exception as e:
     st.error("Error: Please add GROQ_API_KEY to Streamlit Secrets.")
