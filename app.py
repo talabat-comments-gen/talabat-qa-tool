@@ -1,8 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
 
-# بنسحب المفتاح من إعدادات الموقع مش من جوه الكود
-MY_API_KEY = st.secrets["AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"]
+# حط الـ Key هنا مباشرة
+MY_API_KEY = "AQ.Ab8RN6JakCWvc-3KfbBBM0Wxi8E3mM78HahWGndMe4LBE-pjww"
 
 st.set_page_config(page_title="Talabat QA Tool", layout="centered")
 st.title("Talabat QA Analysis Engine")
