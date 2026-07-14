@@ -1,18 +1,19 @@
 import streamlit as st
 import google.generativeai as genai
 
+# حط الـ API Key بتاعك هنا بين علامات التنصيص
+MY_API_KEY = "YOUR_ACTUAL_API_KEY_HERE"
+
 st.set_page_config(page_title="Talabat QA Tool", layout="centered")
 st.title("Talabat QA Analysis Engine")
 
-# إدخال المفتاح والشات
-api_key = st.sidebar.text_input("Enter Gemini API Key", type="password")
+# شيلنا خانة الإدخال من الـ sidebar
 chat_input = st.text_area("Paste Chat Transcript Here:", height=200)
 
-# زرار التنفيذ
 if st.button("Generate Analysis"):
-    if api_key and chat_input:
+    if chat_input:
         try:
-            genai.configure(api_key=api_key)
+            genai.configure(api_key=MY_API_KEY)
             model = genai.GenerativeModel('gemini-pro')
             
             prompt = f"""
@@ -28,6 +29,6 @@ if st.button("Generate Analysis"):
             st.markdown("### Result:")
             st.write(response.text)
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error("خطأ في الاتصال، تأكد من الـ API Key.")
     else:
-        st.warning("Please enter API Key and Chat Transcript.")
+        st.warning("Please paste the chat transcript.")
