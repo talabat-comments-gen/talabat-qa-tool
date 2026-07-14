@@ -5,14 +5,15 @@ import google.generativeai as genai
 st.set_page_config(page_title="أداة تحليل طلبات", layout="wide")
 st.title("🚀 أداة تحليل تقارير الجودة - Talabat")
 
-# إعداد الـ API
+# إعداد الـ API بشكل آمن
 try:
-    # الكود هنا بيبحث عن "صندوق" اسمه GEMINI_API_KEY
     api_key = st.secrets["AQ.Ab8RN6Ix2qeVMs0rWW9B2pwjubJ21C-XVGnjthFWnoliFv2eSQ"]
     genai.configure(api_key=api_key)
+    # تعريف الموديل هنا في مكان عام عشان ميبقاش فيه خطأ
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
     st.error("يرجى التأكد من إضافة الـ API Key في إعدادات Secrets.")
+    st.stop() # هيوقف الموقع لحد ما تحط المفتاح
 
 # واجهة المستخدم بالعربية
 chat_input = st.text_area("انسخ هنا نص الشات (Transcript):", height=250)
@@ -21,6 +22,7 @@ if st.button("بدء التحليل"):
     if chat_input:
         with st.spinner('جاري التحليل...'):
             try:
+                # الكود دلوقتي بيستخدم الموديل اللي عرفناه فوق
                 prompt = f"""
                 أنت Talabat Log Engine. استخرج الحقائق من الشات التالي.
                 التزم بالهيكل التالي بدقة:
