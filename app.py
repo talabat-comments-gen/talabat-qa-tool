@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Page settings: Centered layout (less width)
+# Page settings
 st.set_page_config(page_title="Talabat QA Engine", layout="centered")
 st.title("🚀 Talabat QA Analysis Engine")
 
@@ -9,13 +9,13 @@ st.title("🚀 Talabat QA Analysis Engine")
 try:
     api_key = st.secrets["AQ.Ab8RN6LsFrrH9br-ZSukEHjxRpkXapxYy4Y_ZX1PXWZHqJXosw"]
     genai.configure(api_key=api_key)
-    # غيرنا الموديل هنا للموديل المستقر اللي مش بيعمل 404
     model = genai.GenerativeModel('gemini-pro')
 except Exception as e:
-    st.error("Error: Please make sure GEMINI_API_KEY is added to Streamlit Secrets.")
+    st.error(f"System Error Details: {e}")
+    st.error("Action Required: Please add GEMINI_API_KEY to Streamlit Secrets.")
     st.stop()
 
-# Text area with increased height
+# Text area
 chat_input = st.text_area("Paste Chat Transcript Here:", height=400)
 
 if st.button("Generate Analysis"):
